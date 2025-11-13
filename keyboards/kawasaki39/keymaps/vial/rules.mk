@@ -1,2 +1,3 @@
 VIA_ENABLE = yes
 VIAL_ENABLE = yes
+TRI_LAYER_ENABLE = yes

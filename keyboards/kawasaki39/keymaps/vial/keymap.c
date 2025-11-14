@@ -1,7 +1,29 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 
 #include QMK_KEYBOARD_H
+// ★レイヤー番号をここで決める（0〜13）
+enum layer_number {
+    _MAC_BASE,   // 0 : Macベース
+    _MAC_WIN,    // 1 : Macウィンドウ操作
 
+    _WIN_BASE,   // 2 : Windowsベース
+    _WIN_WIN,    // 3 : Windowsウィンドウ操作
+
+    _AND_BASE,   // 4 : Androidベース
+    _AND_WIN,    // 5 : Androidウィンドウ操作
+
+    _IOS_BASE,   // 6 : iPadベース
+    _IOS_WIN,    // 7 : iPadウィンドウ操作
+
+    _SYMNUM,     // 8 : 全OS共通 記号&数字
+    _FUNC,       // 9 : 全OS共通 機能
+
+    _L10,        // 10: 予備
+    _L11,        // 11: 予備
+    _L12,        // 12: 予備
+
+    _ADJUST      // 13: Adjust（メンテ/OS切替）
+};
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	[0] = LAYOUT(

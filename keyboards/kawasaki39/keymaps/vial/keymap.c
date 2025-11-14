@@ -1,57 +1,118 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 
 #include QMK_KEYBOARD_H
-// ★レイヤー番号をここで決める（0〜13）
+
 enum layer_number {
-    _MAC_BASE,   // 0 : Macベース
-    _MAC_WIN,    // 1 : Macウィンドウ操作
-
-    _WIN_BASE,   // 2 : Windowsベース
-    _WIN_WIN,    // 3 : Windowsウィンドウ操作
-
-    _AND_BASE,   // 4 : Androidベース
-    _AND_WIN,    // 5 : Androidウィンドウ操作
-
-    _IOS_BASE,   // 6 : iPadベース
-    _IOS_WIN,    // 7 : iPadウィンドウ操作
-
-    _SYMNUM,     // 8 : 全OS共通 記号&数字
-    _FUNC,       // 9 : 全OS共通 機能
-
-    _L10,        // 10: 予備
-    _L11,        // 11: 予備
-    _L12,        // 12: 予備
-
-    _ADJUST      // 13: Adjust（メンテ/OS切替）
+    _MAC_BASE,  // 0: Mac base
+    _MAC_WIN,   // 1: Mac window / move
+    _WIN_BASE,  // 2: Windows base
+    _WIN_WIN,   // 3: Windows window / move
+    _AND_BASE,  // 4: Android base
+    _AND_WIN,   // 5: Android window / move
+    _IOS_BASE,  // 6: iPad base
+    _IOS_WIN,   // 7: iPad window / move
+    _SYMNUM,    // 8: common symbols & numbers
+    _FUNC,      // 9: common function layer
+    _FUNC2,     // 10: extra function / reserved
+    _RES1,      // 11: reserved
+    _RES2,      // 12: reserved
+    _ADJUST,    // 13: Adjust / maintenance (SYMNUM+FUNC)
 };
+
+// Shorthand modifiers for momentary layers
+#define SYMNUM  MO(_SYMNUM)
+#define FUNC    MO(_FUNC)
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
-	[0] = LAYOUT(
-		KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,
-		KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_ENT,
-		KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  MT(MOD_LSFT, KC_SCLN),
-		MT(MOD_LSFT,KC_ESC),KC_LGUI, KC_LALT,MT(MOD_LCTL,KC_TAB), LT(1, KC_SPC),LT(1, KC_BSPC),MO(2),   KC_RALT, KC_DEL
-	),
-
-	[1] = LAYOUT(
-		KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_MINS, KC_EQL,
-		KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, KC_NO,
-		KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_NO,   KC_NO,   KC_LBRC, KC_RBRC, KC_BSLS,
-		KC_GRV,  KC_NO,   KC_NO,   KC_LSFT,   KC_LSFT, KC_LSFT, KC_NO,   MO(3),   KC_NO
-	),
-
-	[2] = LAYOUT(
-		KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,
-		KC_F11,  KC_F12,  KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
-		KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
-		KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO
-	),
-
-	[3] = LAYOUT(
-		KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,
-		KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   QK_BOOT,
-		KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   EE_CLR,
-		KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO,   KC_NO
-	),
-
+[_MAC_BASE] = LAYOUT(
+    TD(1), KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P,
+    LSFT_T(KC_A), KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_RSHIFT,
+    KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMMA, KC_DOT, RSFT(KC_SLASH),
+    KC_LCTRL, TD(0), KC_LGUI, SYMNUM, LT(_MAC_WIN, KC_SPACE), KC_BSPACE, LT(_FUNC, KC_ENTER), RSFT(KC_MINUS), KC_ESCAPE
+),
+[_MAC_WIN] = LAYOUT(
+    KC_NO, KC_NO, LCTL(KC_UP), KC_NO, LCTL(KC_J), LCA(KC_D), LCA(KC_E), LCA(KC_F), LCA(KC_T), LCA(KC_G),
+    LCTL(KC_LEFT), KC_NO, KC_NO, LCTL(KC_RIGHT), KC_NO, LCTL(KC_K), LCA(KC_LEFT), KC_F11, LCA(KC_RIGHT), LCA(KC_ENTER),
+    KC_NO, KC_NO, LCTL(KC_DOWN), KC_NO, KC_NO, LCTL(KC_SCOLON), KC_NO, KC_F19, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_TRNS, KC_NO, KC_NO, KC_NO, KC_NO
+),
+[_WIN_BASE] = LAYOUT(
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
+),
+[_WIN_WIN] = LAYOUT(
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
+),
+[_AND_BASE] = LAYOUT(
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
+),
+[_AND_WIN] = LAYOUT(
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
+),
+[_IOS_BASE] = LAYOUT(
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO,
+    KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO, KC_NO
+),
+[_IOS_WIN] = LAYOUT(
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
+),
+[_SYMNUM] = LAYOUT(
+    LSFT(KC_SCOLON), LSFT(KC_QUOTE), LSFT(KC_GRAVE), LSFT(KC_1), LSFT(KC_SLASH), KC_KP_SLASH, KC_7, KC_8, KC_9, KC_MINUS,
+    KC_BSLASH, LSFT(KC_7), LSFT(KC_3), KC_LBRACKET, KC_RBRACKET, KC_KP_ASTERISK, KC_4, KC_5, KC_6, LSFT(KC_EQUAL),
+    LSFT(KC_4), LSFT(KC_2), LSFT(KC_5), LSFT(KC_9), LSFT(KC_0), KC_0, KC_1, KC_2, KC_3, KC_COMMA,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_DELETE, KC_TRNS, KC_TRNS, KC_EQUAL
+),
+[_FUNC] = LAYOUT(
+    KC_HOME, KC_TRNS, KC_TRNS, KC_TRNS, KC_VOLU, KC_BRIU, KC_TRNS, KC_TRNS, KC_ESCAPE, KC_PSCREEN,
+    KC_LSHIFT, KC_TRNS, KC_WH_U, KC_TRNS, KC_VOLD, KC_BRID, KC_BTN1, KC_UP, KC_BTN2, KC_RSHIFT,
+    KC_TRNS, KC_WH_L, KC_WH_D, KC_WH_R, KC_TRNS, KC_TRNS, KC_LEFT, KC_DOWN, KC_RIGHT, KC_TRNS,
+    KC_END, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
+),
+[_FUNC2] = LAYOUT(
+    KC_A, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
+),
+[_RES1] = LAYOUT(
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
+),
+[_RES2] = LAYOUT(
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
+),
+[_ADJUST] = LAYOUT(
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
+),
 };
+
+// Tri-layer: SYMNUM (8) + FUNC (9) → ADJUST (13)
+layer_state_t layer_state_set_user(layer_state_t state) {
+    // When both SYMNUM and FUNC are active, turn on ADJUST
+    return update_tri_layer_state(state, _SYMNUM, _FUNC, _ADJUST);
+}
+
